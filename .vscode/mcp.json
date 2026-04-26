@@ -1,0 +1,30 @@
+{
+  "servers": {
+    "confluence": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-confluence@latest"],
+      "env": {
+        "CONFLUENCE_URL": "${env:CONFLUENCE_URL}",
+        "CONFLUENCE_USERNAME": "${env:CONFLUENCE_USERNAME}",
+        "CONFLUENCE_API_TOKEN": "${env:CONFLUENCE_API_TOKEN}"
+      }
+    },
+    "jira": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-jira@latest"],
+      "env": {
+        "JIRA_URL": "${env:JIRA_URL}",
+        "JIRA_USERNAME": "${env:JIRA_USERNAME}",
+        "JIRA_API_TOKEN": "${env:JIRA_API_TOKEN}",
+        "JIRA_PROJECT_KEY": "${env:JIRA_PROJECT_KEY}"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"],
+      "env": {
+        "PLAYWRIGHT_BROWSERS_PATH": "0"
+      }
+    }
+  }
+}

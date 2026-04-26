@@ -1,0 +1,591 @@
+Date: Sun, 19 Apr 2026 13:18:16 +0000 (GMT)
+Message-ID: <1239839548.111305.1776604696145@kb.epam.com>
+Subject: Exported From Confluence
+MIME-Version: 1.0
+Content-Type: multipart/related; 
+	boundary="----=_Part_111304_605914743.1776604696144"
+
+------=_Part_111304_605914743.1776604696144
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///C:/exported.html
+
+<html xmlns:o=3D'urn:schemas-microsoft-com:office:office'
+      xmlns:w=3D'urn:schemas-microsoft-com:office:word'
+      xmlns:v=3D'urn:schemas-microsoft-com:vml'
+      xmlns=3D'urn:w3-org-ns:HTML'>
+<head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8=
+">
+    <title>Online Library Requirements Page</title>
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:TargetScreenSize>1024x640</o:TargetScreenSize>
+            <o:PixelsPerInch>72</o:PixelsPerInch>
+            <o:AllowPNG/>
+        </o:OfficeDocumentSettings>
+        <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>90</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
+        </w:WordDocument>
+    </xml>
+    <![endif]-->
+    <style>
+                <!--
+        @page Section1 {
+            size: 8.5in 11.0in;
+            margin: 1.0in;
+            mso-header-margin: .5in;
+            mso-footer-margin: .5in;
+            mso-paper-source: 0;
+        }
+
+        table {
+            border: solid 1px;
+            border-collapse: collapse;
+        }
+
+        table td, table th {
+            border: solid 1px;
+            padding: 5px;
+        }
+
+        td {
+            page-break-inside: avoid;
+        }
+
+        tr {
+            page-break-after: avoid;
+        }
+
+        div.Section1 {
+            page: Section1;
+        }
+
+        /* Confluence print stylesheet. Common to all themes for print medi=
+a */
+/* Full of !important until we improve batching for print CSS */
+
+@media print {
+    #main {
+        padding-bottom: 1em !important; /* The default padding of 6em is to=
+o much for printouts */
+    }
+
+    body {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        font-size: 10pt;
+        line-height: 1.2;
+    }
+
+    body, #full-height-container, #main, #page, #content, .has-personal-sid=
+ebar #content {
+        background: var(--ds-surface, #fff) !important;
+        color: var(--ds-text, #000) !important;
+        border: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    a, a:link, a:visited, a:focus, a:hover, a:active {
+        color: var(--ds-link-pressed, #000);
+    }
+
+    #content h1,
+    #content h2,
+    #content h3,
+    #content h4,
+    #content h5,
+    #content h6 {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        page-break-after: avoid;
+    }
+
+    pre {
+        font-family: Monaco, "Courier New", monospace;
+    }
+
+    #header,
+    .aui-header-inner,
+    #navigation,
+    #sidebar,
+    .sidebar,
+    #personal-info-sidebar,
+    .ia-fixed-sidebar,
+    .page-actions,
+    .navmenu,
+    .ajs-menu-bar,
+    .noprint,
+    .inline-control-link,
+    .inline-control-link a,
+    a.show-labels-editor,
+    .global-comment-actions,
+    .comment-actions,
+    .quick-comment-container,
+    #addcomment {
+        display: none !important;
+    }
+
+    /* CONF-28544 cannot print multiple pages in IE */
+    #splitter-content {
+        position: relative !important;
+    }
+
+    .comment .date::before {
+        content: none !important; /* remove middot for print view */
+    }
+
+    h1.pagetitle img {
+        height: auto;
+        width: auto;
+    }
+
+    .print-only {
+        display: block;
+    }
+
+    #footer {
+        position: relative !important; /* CONF-17506 Place the footer at en=
+d of the content */
+        margin: 0;
+        padding: 0;
+        background: none;
+        clear: both;
+    }
+
+    #poweredby {
+        border-top: none;
+        background: none;
+    }
+
+    #poweredby li.print-only {
+        display: list-item;
+        font-style: italic;
+    }
+
+    #poweredby li.noprint {
+        display: none;
+    }
+
+    /* no width controls in print */
+    .wiki-content .table-wrap,
+    .wiki-content p,
+    .panel .codeContent,
+    .panel .codeContent pre,
+    .image-wrap {
+        overflow: visible !important;
+    }
+
+    /* TODO - should this work? */
+    #children-section,
+    #comments-section .comment,
+    #comments-section .comment .comment-body,
+    #comments-section .comment .comment-content,
+    #comments-section .comment p {
+        page-break-inside: avoid;
+    }
+
+    #page-children a {
+        text-decoration: none;
+    }
+
+    /**
+     hide twixies
+
+     the specificity here is a hack because print styles
+     are getting loaded before the base styles. */
+    #comments-section.pageSection .section-header,
+    #comments-section.pageSection .section-title,
+    #children-section.pageSection .section-header,
+    #children-section.pageSection .section-title,
+    .children-show-hide {
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .children-show-hide.icon {
+        display: none;
+    }
+
+    /* personal sidebar */
+    .has-personal-sidebar #content {
+        margin-right: 0px;
+    }
+
+    .has-personal-sidebar #content .pageSection {
+        margin-right: 0px;
+    }
+
+    .no-print, .no-print * {
+        display: none !important;
+    }
+}
+-->
+    </style>
+</head>
+<body>
+    <h1>Online Library Requirements Page</h1>
+    <div class=3D"Section1">
+        <p>Online Library Requirements</p>
+<ol>
+ <li>Functional Requirements Document - Online Library Management System</l=
+i>
+</ol>
+<p>=E2=80=94</p>
+<h1><a name=3D"OnlineLibraryRequirementsPage-FunctionalRequirementsDocument=
+"></a>Functional Requirements Document</h1>
+<h2><a name=3D"OnlineLibraryRequirementsPage-OnlineLibraryManagementSystem"=
+></a>Online Library Management System</h2>
+<p>=E2=80=94</p>
+<p><strong>Document Information</strong></p>
+<table class=3D"confluenceTable">
+ <tbody>
+  <tr>
+   <th class=3D"confluenceTh">
+    <p>Field</p></th>
+   <th class=3D"confluenceTh">
+    <p>Value</p></th>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Project Name</p></td>
+   <td class=3D"confluenceTd">
+    <p>Online Library Management System</p></td>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Document Type</p></td>
+   <td class=3D"confluenceTd">
+    <p>Functional Requirements Specification</p></td>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Version</p></td>
+   <td class=3D"confluenceTd">
+    <p>1.0</p></td>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Date</p></td>
+   <td class=3D"confluenceTd">
+    <p>April 19, 2026</p></td>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Prepared By</p></td>
+   <td class=3D"confluenceTd">
+    <p>CodeMie (Business Analyst)</p></td>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Prepared For</p></td>
+   <td class=3D"confluenceTd">
+    <p>janpreetsingh_jolly@epam.com</p></td>
+  </tr>
+ </tbody>
+</table>
+<p>=E2=80=94</p>
+<h2><a name=3D"OnlineLibraryRequirementsPage-1.Introduction"></a>1. Introdu=
+ction</h2>
+<h3><a name=3D"OnlineLibraryRequirementsPage-1.1Purpose"></a>1.1 Purpose</h=
+3>
+<p>This document outlines the functional requirements for the Online Librar=
+y Management System. It describes what the system should do to meet stakeho=
+lder needs.</p>
+<h3><a name=3D"OnlineLibraryRequirementsPage-1.2Scope"></a>1.2 Scope</h3>
+<p>The system will manage library operations including book inventory, memb=
+er management, borrowing/returning books, and basic reporting.</p>
+<p>=E2=80=94</p>
+<h2><a name=3D"OnlineLibraryRequirementsPage-2.UserRoles"></a>2. User Roles=
+</h2>
+<table class=3D"confluenceTable">
+ <tbody>
+  <tr>
+   <th class=3D"confluenceTh">
+    <p>Role</p></th>
+   <th class=3D"confluenceTh">
+    <p>Description</p></th>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Admin</p></td>
+   <td class=3D"confluenceTd">
+    <p>Manages the entire system, users, and library inventory</p></td>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Librarian</p></td>
+   <td class=3D"confluenceTd">
+    <p>Handles day-to-day operations like issuing and returning books</p></=
+td>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Member</p></td>
+   <td class=3D"confluenceTd">
+    <p>Library users who can browse and borrow books</p></td>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Guest</p></td>
+   <td class=3D"confluenceTd">
+    <p>Users who can only browse books</p></td>
+  </tr>
+ </tbody>
+</table>
+<p>=E2=80=94</p>
+<h2><a name=3D"OnlineLibraryRequirementsPage-3.FunctionalRequirements"></a>=
+3. Functional Requirements</h2>
+<h3><a name=3D"OnlineLibraryRequirementsPage-3.1UserManagement"></a>3.1 Use=
+r Management</h3>
+<p><strong>FR-1.1: User Registration</strong><br>
+  The system shall allow Admin to register new users (Librarians and Member=
+s)</p>
+<p><strong>FR-1.2: User Login</strong><br>
+  The system shall allow users to login using email and password</p>
+<p><strong>FR-1.3: Profile Update</strong><br>
+  The system shall allow users to update their profile information</p>
+<p><strong>FR-1.4: Password Reset</strong><br>
+  The system shall allow users to reset forgotten passwords via email</p>
+<p><strong>FR-1.5: User Account Management</strong><br>
+  The system shall allow Admin to deactivate/activate user accounts</p>
+<p><strong>FR-1.6: Guest Login</strong><br>
+  The system shall allow guest users to login using name</p>
+<p>=E2=80=94</p>
+<h3><a name=3D"OnlineLibraryRequirementsPage-3.2BookManagement"></a>3.2 Boo=
+k Management</h3>
+<p><strong>FR-2.1: Add New Books</strong><br>
+  The system shall allow Admin/Librarian to add new books with the followin=
+g details:</p>
+<ul>
+ <li>Title</li>
+ <li>Author</li>
+ <li>ISBN</li>
+ <li>Category</li>
+ <li>Publisher</li>
+ <li>Publication Year</li>
+ <li>Number of Copies</li>
+ <li>Book Cover Image (optional)</li>
+</ul>
+<p><strong>FR-2.2: Edit Book Details</strong><br>
+  The system shall allow Admin/Librarian to edit book details</p>
+<p><strong>FR-2.3: Delete Books</strong><br>
+  The system shall allow Admin/Librarian to delete books from the system</p=
+>
+<p><strong>FR-2.4: Track Book Copies</strong><br>
+  The system shall track available and borrowed copies of each book</p>
+<p><strong>FR-2.5: Search Books</strong><br>
+  The system shall allow users to search books by:</p>
+<ul>
+ <li>Title</li>
+ <li>Author</li>
+ <li>ISBN</li>
+ <li>Category</li>
+</ul>
+<p><strong>FR-2.6: Display Book Availability</strong><br>
+  The system shall display book availability status (Available/Borrowed)</p=
+>
+<p>=E2=80=94</p>
+<h3><a name=3D"OnlineLibraryRequirementsPage-3.3BorrowingandReturningBooks"=
+></a>3.3 Borrowing and Returning Books</h3>
+<p><strong>FR-3.1: Borrow Request</strong><br>
+  The system shall allow Members to request to borrow available books</p>
+<p><strong>FR-3.2: Issue Books</strong><br>
+  The system shall allow Librarian to issue books to Members</p>
+<p><strong>FR-3.3: Record Issue and Due Dates</strong><br>
+  The system shall record the issue date and due date (14 days from issue)<=
+/p>
+<p><strong>FR-3.4: Borrowing Limit</strong><br>
+  The system shall limit each Member to borrow maximum 5 books at a time</p=
+>
+<p><strong>FR-3.5: Process Returns</strong><br>
+  The system shall allow Librarian to process book returns</p>
+<p><strong>FR-3.6: Calculate Late Fees</strong><br>
+  The system shall calculate late fees for overdue books at $1 per day</p>
+<p><strong>FR-3.7: Due Date Reminders</strong><br>
+  The system shall send email reminders 2 days before the due date</p>
+<p>=E2=80=94</p>
+<h3><a name=3D"OnlineLibraryRequirementsPage-3.4ReservationSystem"></a>3.4 =
+Reservation System</h3>
+<p><strong>FR-4.1: Reserve Books</strong><br>
+  The system shall allow Members to reserve books that are currently borrow=
+ed</p>
+<p><strong>FR-4.2: Availability Notification</strong><br>
+  The system shall notify Members when their reserved book becomes availabl=
+e</p>
+<p><strong>FR-4.3: Reservation Hold Period</strong><br>
+  The system shall hold reservations for 3 days before releasing to next in=
+ queue</p>
+<p>=E2=80=94</p>
+<h3><a name=3D"OnlineLibraryRequirementsPage-3.5MemberPortal"></a>3.5 Membe=
+r Portal</h3>
+<p><strong>FR-5.1: View Currently Borrowed Books</strong><br>
+  The system shall allow Members to view their currently borrowed books</p>
+<p><strong>FR-5.2: View Borrowing History</strong><br>
+  The system shall allow Members to view their borrowing history</p>
+<p><strong>FR-5.3: View Outstanding Fines</strong><br>
+  The system shall allow Members to view outstanding fines</p>
+<p><strong>FR-5.4: Renew Books</strong><br>
+  The system shall allow Members to renew books (maximum 2 renewals per boo=
+k)</p>
+<p><strong>FR-5.5: Display Due Dates</strong><br>
+  The system shall display due dates and overdue status</p>
+<p>=E2=80=94</p>
+<h3><a name=3D"OnlineLibraryRequirementsPage-3.6ReportsandAnalytics"></a>3.=
+6 Reports and Analytics</h3>
+<p><strong>FR-6.1: Generate Reports</strong><br>
+  The system shall generate reports for:</p>
+<ul>
+ <li>Most borrowed books</li>
+ <li>Overdue books list</li>
+ <li>Member borrowing statistics</li>
+ <li>Books available/unavailable</li>
+</ul>
+<p><strong>FR-6.2: Export Reports</strong><br>
+  The system shall allow Admin to export reports in PDF and Excel formats</=
+p>
+<p><strong>FR-6.3: Dashboard Metrics</strong><br>
+  The system shall display dashboard with key metrics:</p>
+<ul>
+ <li>Total books</li>
+ <li>Total members</li>
+ <li>Books currently borrowed</li>
+ <li>Overdue books count</li>
+</ul>
+<p>=E2=80=94</p>
+<h3><a name=3D"OnlineLibraryRequirementsPage-3.7PaymentManagement"></a>3.7 =
+Payment Management</h3>
+<p><strong>FR-7.1: View Fines</strong><br>
+  The system shall allow Members to view outstanding fines</p>
+<p><strong>FR-7.2: Record Payments</strong><br>
+  The system shall allow Librarian to record fine payments</p>
+<p><strong>FR-7.3: Payment History</strong><br>
+  The system shall maintain payment history for each Member</p>
+<p>=E2=80=94</p>
+<h3><a name=3D"OnlineLibraryRequirementsPage-3.8Notifications"></a>3.8 Noti=
+fications</h3>
+<p><strong>FR-8.1: Email Notifications</strong><br>
+  The system shall send email notifications for:</p>
+<ul>
+ <li>Successful book issue</li>
+ <li>Due date reminders</li>
+ <li>Overdue notices</li>
+ <li>Reserved book availability</li>
+ <li>Account activation/deactivation</li>
+</ul>
+<p>=E2=80=94</p>
+<h2><a name=3D"OnlineLibraryRequirementsPage-4.BusinessRules"></a>4. Busine=
+ss Rules</h2>
+<p><strong>BR-1: Overdue Book Restriction</strong><br>
+  A Member cannot borrow more books if they have overdue books</p>
+<p><strong>BR-2: Fine Payment Requirement</strong><br>
+  A Member must pay outstanding fines before borrowing new books</p>
+<p><strong>BR-3: Renewal Restriction</strong><br>
+  Books can only be renewed if no other Member has reserved them</p>
+<p><strong>BR-4: Borrowing Period</strong><br>
+  Maximum borrowing period is 14 days (can be extended via renewal)</p>
+<p><strong>BR-5: Reservation Priority</strong><br>
+  Reservations are processed on first-come, first-served basis</p>
+<p>=E2=80=94</p>
+<h2><a name=3D"OnlineLibraryRequirementsPage-5.AcceptanceCriteriaSummary"><=
+/a>5. Acceptance Criteria Summary</h2>
+<div class=3D"panel" style=3D"background-color: #FFFFCE;border-color: #ccc;=
+border-width: 1px;">
+ <div class=3D"panelHeader" style=3D"border-bottom-width: 1px;border-bottom=
+-color: #ccc;background-color: #E8E8E8;">
+  <b>Acceptance Criteria</b>
+ </div>
+ <div class=3D"panelContent" style=3D"background-color: #FFFFCE;">
+  <p>All user roles can successfully login and access their respective feat=
+ures<br>
+    Books can be added, edited, searched, and managed effectively<br>
+    Borrowing and returning workflow functions correctly with proper valida=
+tions<br>
+    Notifications are sent at appropriate times<br>
+    Reports generate accurate data<br>
+    System prevents business rule violations</p>
+ </div>
+</div>
+<p>=E2=80=94</p>
+<h2><a name=3D"OnlineLibraryRequirementsPage-6.FutureEnhancements"></a>6. F=
+uture Enhancements</h2>
+<div role=3D"region" aria-label=3D"Info" class=3D"confluence-information-ma=
+cro  confluence-information-macro-information">
+ <p class=3D"title conf-macro-render">Out of Scope for Version 1.0</p><span=
+ role=3D"presentation" class=3D"aui-icon aui-icon-small aui-iconfont-info-f=
+illed confluence-information-macro-icon"></span>
+ <div class=3D"confluence-information-macro-body">
+  <ul>
+   <li>Mobile application</li>
+   <li>Online payment integration</li>
+   <li>Digital book lending (e-books)</li>
+   <li>Community features (reviews, ratings)</li>
+   <li>Integration with external library systems</li>
+  </ul>
+ </div>
+</div>
+<p>=E2=80=94</p>
+<h2><a name=3D"OnlineLibraryRequirementsPage-7.ApprovalSignatures"></a>7. A=
+pproval Signatures</h2>
+<table class=3D"confluenceTable">
+ <tbody>
+  <tr>
+   <th class=3D"confluenceTh">
+    <p>Role</p></th>
+   <th class=3D"confluenceTh">
+    <p>Name</p></th>
+   <th class=3D"confluenceTh">
+    <p>Signature</p></th>
+   <th class=3D"confluenceTh">
+    <p>Date</p></th>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Project Sponsor</p></td>
+   <td class=3D"confluenceTd">
+    <p>&nbsp;</p></td>
+   <td class=3D"confluenceTd">
+    <p>&nbsp;</p></td>
+   <td class=3D"confluenceTd">
+    <p>&nbsp;</p></td>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Product Owner</p></td>
+   <td class=3D"confluenceTd">
+    <p>&nbsp;</p></td>
+   <td class=3D"confluenceTd">
+    <p>&nbsp;</p></td>
+   <td class=3D"confluenceTd">
+    <p>&nbsp;</p></td>
+  </tr>
+  <tr>
+   <td class=3D"confluenceTd">
+    <p>Business Analyst</p></td>
+   <td class=3D"confluenceTd">
+    <p>CodeMie</p></td>
+   <td class=3D"confluenceTd">
+    <p>&nbsp;</p></td>
+   <td class=3D"confluenceTd">
+    <p>April 19, 2026</p></td>
+  </tr>
+ </tbody>
+</table>
+<p>=E2=80=94</p>
+<div role=3D"region" aria-label=3D"Tip" class=3D"confluence-information-mac=
+ro  confluence-information-macro-tip">
+ <span role=3D"presentation" class=3D"aui-icon aui-icon-small aui-iconfont-=
+approve confluence-information-macro-icon"></span>
+ <div class=3D"confluence-information-macro-body"></div>
+</div>
+<p><strong>END OF DOCUMENT</strong></p>
+    </div>
+</body>
+</html>
+------=_Part_111304_605914743.1776604696144--

@@ -11,6 +11,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from app.database import SessionLocal, engine, Base
 from app.models.user import User, UserRole  # noqa: F401 — registers model
+from app.models.book import Book  # noqa: F401 — registers model
+from app.models.borrow_transaction import BorrowTransaction  # noqa: F401 — registers model
 from app.auth.passwords import hash_password
 from app.config import settings
 

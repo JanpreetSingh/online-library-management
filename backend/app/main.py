@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, users, books
+from app.routers import auth, users, books, borrow
 
 app = FastAPI(
     title="Online Library Management API",
@@ -28,6 +28,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(books.router)
+app.include_router(borrow.router)
 
 
 @app.get("/health", tags=["health"])

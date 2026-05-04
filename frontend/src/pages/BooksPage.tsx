@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { bookService } from '../services/bookService';
+import { borrowService } from '../services/borrowService';
 import BookForm, { type BookFormValues } from '../components/BookForm';
 import type { Book } from '../types/book';
 
@@ -10,12 +11,14 @@ export default function BooksPage() {
   const { hasRole, user } = useAuth();
   const navigate = useNavigate();
   const canManage = hasRole(['admin', 'librarian']);
+  const canBorrow = hasRole(['admin', 'librarian', 'member']);
 
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [borrowingBookId, setBorrowingBookId] = useState<string | null>(null);
 
   // Load books on mount
   useEffect(() => {
@@ -62,6 +65,33 @@ export default function BooksPage() {
       toast.error(msg);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleBorrowBook = async (bookId: string, bookTitle: string) => {
+    setBorrowingBookId(bookId);
+    try {
+      const response = await borrowService.borrowBook(bookId);
+      
+      // Update the book's available copies in the local state
+      setBooks((prev) =>
+        prev.map((book) =>
+          book.id === bookId
+            ? { ...book, available_copies: book.available_copies - 1 }
+            : book
+        )
+      );
+
+      // Format due date
+      const dueDate = new Date(response.due_date).toLocaleDateString();
+      toast.success(`Successfully borrowed "${bookTitle}"! Due date: ${dueDate}`);
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
+        'Failed to borrow book';
+      toast.error(msg);
+    } finally {
+      setBorrowingBookId(null);
     }
   };
 
@@ -175,9 +205,7 @@ export default function BooksPage() {
                     <th className="text-left px-4 py-3 font-semibold text-gray-600">Category</th>
                     <th className="text-center px-4 py-3 font-semibold text-gray-600">Copies</th>
                     <th className="text-center px-4 py-3 font-semibold text-gray-600">Available</th>
-                    {canManage && (
-                      <th className="text-center px-4 py-3 font-semibold text-gray-600">Actions</th>
-                    )}
+                    <th className="text-center px-4 py-3 font-semibold text-gray-600">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -224,16 +252,27 @@ export default function BooksPage() {
                           {book.available_copies > 0 ? `${book.available_copies} available` : 'All borrowed'}
                         </span>
                       </td>
-                      {canManage && (
-                        <td className="px-4 py-3 text-center">
-                          <button
-                            onClick={() => navigate(`/books/${book.id}/edit`)}
-                            className="text-xs text-blue-600 hover:text-blue-800 font-medium border border-blue-200 hover:border-blue-400 px-3 py-1 rounded-lg transition"
-                          >
-                            Edit
-                          </button>
-                        </td>
-                      )}
+                      <td className="px-4 py-3 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          {canBorrow && book.available_copies > 0 && (
+                            <button
+                              onClick={() => handleBorrowBook(book.id, book.title)}
+                              disabled={borrowingBookId === book.id}
+                              className="text-xs text-green-600 hover:text-green-800 font-medium border border-green-200 hover:border-green-400 px-3 py-1 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              {borrowingBookId === book.id ? 'Borrowing...' : 'Borrow'}
+                            </button>
+                          )}
+                          {canManage && (
+                            <button
+                              onClick={() => navigate(`/books/${book.id}/edit`)}
+                              className="text-xs text-blue-600 hover:text-blue-800 font-medium border border-blue-200 hover:border-blue-400 px-3 py-1 rounded-lg transition"
+                            >
+                              Edit
+                            </button>
+                          )}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

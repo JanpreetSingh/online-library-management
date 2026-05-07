@@ -1,57 +1,75 @@
 ---
-description: 'Jira test case format and upload guidelines. Loaded when creating test cases, writing Given/When/Then scenarios, or uploading test cases to Jira for the Online Library Management project.'
+description: 'Jira User Story format and upload guidelines. Loaded when creating user stories, writing acceptance criteria, or uploading user stories to Jira for the Online Library Management project.'
 ---
 
-# Jira Test Case Guidelines
+# Jira User Story Guidelines
 
 ## Format
 
-All test cases must use **Given/When/Then** format:
+All user stories must follow the standard narrative format:
 
 ```
-Given: <precondition — system state and user role>
-When:  <action the user performs>
-Then:  <expected outcome, including UI feedback>
+As a <role>,
+I want <capability or action>,
+So that <business benefit or outcome>.
 ```
 
 ## Issue Fields
 
 | Field | Value |
 |-------|-------|
-| Issue Type | Test |
-| Summary | `TC-NNN: <short action description>` |
-| Labels | `automation`, `regression`, `<REQ-ID>` |
-| Priority | Match requirement priority |
-| Description | Full Given/When/Then steps |
-| Linked Requirement | REQ-ID in description and as a label |
+| Issue Type | User Story |
+| Summary | `As a <role>, I want <capability> so that <benefit>` |
+| Labels | `online-library`, `<REQ-ID>` |
+| Priority | Match source requirement priority |
+| Description | Context paragraph + Acceptance Criteria bullet list |
+| Linked Requirement | REQ-ID included as a label |
 
 ## Naming Convention
 
-`TC-NNN: <Role> <action> <subject>`  
-Examples:
-- `TC-001: Admin creates a new book`
-- `TC-002: Member cannot delete a book`
-- `TC-003: Guest views book list without login`
+Summary must follow the narrative format exactly:  
+- `As a member, I want to borrow a book so that I can read it at home`
+- `As an admin, I want to view all users so that I can manage accounts`
+- `As a guest, I want to browse the book catalogue so that I can find books without registering`
 
-## Coverage Rules
+## Acceptance Criteria Format
 
-- 1 acceptance criterion → minimum 1 test case
-- Role-based features → one test case per role that has different permissions
-- CRUD operations → separate test cases for each operation
-- Every requirement must have at least one negative test (invalid input, unauthorized access)
+All acceptance criteria must be written in **Gherkin format** (Given / When / Then). List each scenario under a `h3. Acceptance Criteria` heading in the description:
+
+```
+h3. Acceptance Criteria
+
+Given <precondition — system state and user role>
+When  <action the user performs>
+Then  <expected outcome, including UI feedback>
+
+Given <precondition for next scenario>
+When  <action>
+Then  <expected outcome>
+```
+
+**Example:**
+```
+Given the member is logged in
+When they click "Borrow" on an available book
+Then the system records the borrow date and shows a confirmation message
+
+Given the book is already borrowed
+When the member attempts to borrow it
+Then an error message "Book not available" is displayed
+```
+
+## Writing Rules
+
+- Role must be one of: `admin`, `librarian`, `member`, `guest`
+- Acceptance criteria must be in **Gherkin format** (Given / When / Then) — one scenario per criterion
+- Do not paraphrase the source requirement intent — translate it faithfully into Gherkin
+- One User Story per requirement ID
+- Priority must match the source requirement
+- Include the REQ-ID in both the label field and the description footer
 
 ## Labels
 
-Always apply all three base labels:
-- `automation` — indicates the test should be automated
-- `regression` — included in regression suite
-- `<REQ-ID>` — links to the requirement (e.g., `REQ-003`)
-
-## Precondition Template
-
-Standard preconditions by role:
-- Admin: "User is logged in as admin (admin@library.com)"
-- Librarian: "User is logged in as librarian"
-- Member: "User is logged in as member"
-- Guest: "User is not logged in"
-- Common: "Application is running at http://localhost:3000"
+Always apply both base labels:
+- `AI-Generated` — Suggests the issue was created by an AI agent
+- `<REQ-ID>` — links to the source requirement (e.g., `REQ-003`)

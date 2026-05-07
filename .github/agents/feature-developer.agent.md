@@ -21,11 +21,17 @@ You are a full-stack Python/TypeScript developer for the Online Library Manageme
 4. **Frontend** — Create React functional components in `frontend/src/pages/`. Register route in `frontend/src/App.tsx`. Call backend via `frontend/src/services/api.ts` patterns.
 5. **Tests** — Write pytest unit tests for the new backend endpoint.
 6. **Verify** — Confirm no existing routes or imports were broken.
+7. **Git Diff** — Run `git diff` and display the full output so the human can review every change before deciding to commit.
 
 ## Output
 
-End with a file change summary:
+End with a file change summary followed by the full `git diff` output:
 ```
 Created:  backend/app/routers/X.py, frontend/src/pages/X.tsx, ...
 Modified: backend/app/main.py, frontend/src/App.tsx
+
+--- git diff ---
+<full diff output here>
 ```
+
+**Do NOT run `git add` or `git commit`. The human will commit when ready.**

@@ -11,9 +11,14 @@ This guide explains how GitHub Copilot is configured in this project, what it ca
 - [Step-by-Step Workflow](#step-by-step-workflow)
   - [Step 1 — Fetch Requirements from Confluence](#step-1--fetch-requirements-from-confluence)
   - [Step 2 — Run Gap Analysis](#step-2--run-gap-analysis)
-  - [Step 3 — Create Jira Test Cases](#step-3--create-jira-test-cases)
-  - [Step 4 — Implement a Feature](#step-4--implement-a-feature)
-  - [Step 5 — Run Playwright E2E Tests](#step-5--run-playwright-e2e-tests)
+  - [Step 3 — Create Jira User Stories](#step-3--create-jira-user-stories)
+  - [Step 4 — Select a User Story](#step-4--select-a-user-story)
+  - [Step 5 — Design](#step-5--design)
+  - [Step 6 — Code](#step-6--code)
+  - [Step 7 — Code Review](#step-7--code-review)
+  - [Step 8 — Test](#step-8--test)
+  - [Step 9 — Deployment](#step-9--deployment)
+  - [Step 10 — Documentation](#step-10--documentation)
 - [Available Agents](#available-agents)
 - [Available Skills](#available-skills)
 - [Example Prompts](#example-prompts)
@@ -33,10 +38,14 @@ Copilot in this project is wired up with:
 |---|---|
 | Read requirements from Confluence | `confluence/*` MCP tools |
 | Analyse gaps between requirements and code | `gap-analyzer` agent |
-| Create structured test cases in Jira | `jira/*` MCP tools |
+| Create User Stories in Jira | `jira-uploader` agent |
+| Produce architecture design and API contract | `design-assistant` agent |
 | Implement backend FastAPI features | `feature-developer` agent |
 | Implement frontend React features | `feature-developer` agent |
+| Review uncommitted code changes | `code-review-assistant` agent |
 | Write & run Playwright E2E tests | `playwright-runner` agent |
+| Deploy locally and verify health | `deployment-assistant` agent |
+| Update application docs in Confluence | `documentation-assistant` agent |
 | Run the full SDLC pipeline end-to-end | `sdlc-orchestrator` agent |
 
 ---
@@ -50,19 +59,34 @@ Confluence (requirements)
   Gap Analysis (what is missing?)
         │
         ▼
-  Jira Test Cases (Given/When/Then)
+  Jira User Stories (created for each missing requirement)
         │
         ▼
-  User Picks Requirement to Implement
+  ── HUMAN: select a user story ──
         │
         ▼
-  Feature Development (backend → frontend → unit tests)
+  Design (architecture + API contract → Confluence) ── HUMAN review
         │
         ▼
-  Playwright E2E Automation → HTML Report
+  Code (backend + frontend + unit tests + git diff) ── HUMAN review
+        │
+        ▼
+  Code Review (structured diff analysis) ── HUMAN review
+        │
+        ▼
+  Test (Playwright E2E → HTML report) ── HUMAN review
+        │
+        ▼
+  Deployment (docker-compose + health checks) ── HUMAN review
+        │
+        ▼
+  Documentation (Confluence app docs updated) ── HUMAN review
+        │
+        ▼
+  Loop — next user story or stop
 ```
 
-Copilot **never auto-selects** which feature to build next — it always presents the gap analysis and waits for your approval.
+Copilot **never auto-selects** which feature to build next — it always presents the gap analysis and waits for your approval. Every step from Design onwards requires explicit human sign-off before the next step begins.
 
 ---
 
@@ -102,23 +126,46 @@ Copilot will:
 
 ---
 
-### Step 3 — Create Jira Test Cases
+### Step 3 — Create Jira User Stories
 
-After gap analysis, ask Copilot to create test cases for missing requirements:
+After gap analysis, ask Copilot to create User Stories for missing requirements:
 
 ```
-Create Jira test cases for the missing requirements.
+Create Jira user stories for the missing requirements.
 ```
 
 Copilot will:
-1. Write **Given / When / Then** scenarios for each acceptance criterion
-2. Apply naming convention `TC-NNN: <Role> <action> <subject>`
-3. Add labels: `automation`, `regression`, `<REQ-ID>`
-4. Upload each test case to Jira via MCP tools
+1. Compose a **User Story** for each missing/partial requirement (`As a <role>, I want … so that …`)
+2. Add a Description and Acceptance Criteria bullet list
+3. Set issue type to `User Story` with label `<REQ-ID>`
+4. Upload each user story to Jira via MCP tools
 
 ---
 
-### Step 4 — Implement a Feature
+### Step 4 — Select a User Story
+
+Copilot presents the gap table and **waits for your choice**:
+
+```
+Which user story should I work on next? Reply with the REQ-ID.
+```
+
+Reply with a `REQ-ID` to continue, or `stop` to end the session.
+
+---
+
+### Step 5 — Design
+
+Copilot's `design-assistant` produces a design document and publishes it to Confluence:
+
+- **Architecture overview** — which files will be created or modified
+- **API contract** — endpoint paths, HTTP methods, request/response shapes
+
+You receive the Confluence URL and must reply `continue` before coding begins.
+
+---
+
+### Step 6 — Code
 
 Tell Copilot which requirement to implement (always your choice):
 
@@ -132,6 +179,9 @@ Copilot will:
 3. Implement the **backend** first (FastAPI router, Pydantic schema, SQLAlchemy model)
 4. Implement the **frontend** (React page, service layer, route registration)
 5. Write unit tests
+6. Display the full **`git diff`** output for your review
+
+> Copilot does **not** commit. You commit when you are ready.
 
 #### What Copilot always does during implementation:
 - Follows existing router patterns in `backend/app/routers/`
@@ -141,23 +191,67 @@ Copilot will:
 - Uses `react-hook-form` + Zod for all forms
 - Reads environment variables from `backend/app/config.py` — never hardcodes secrets
 
+You receive the git diff and must reply `continue` before the review step begins.
+
 ---
 
-### Step 5 — Run Playwright E2E Tests
+### Step 7 — Code Review
 
-After a feature is implemented, ask Copilot to write and run E2E tests:
+The `code-review-assistant` analyses the uncommitted diff and produces a structured review:
+
+| File | Line | Severity | Finding |
+|------|------|----------|---------|
+| backend/app/routers/X.py | 42 | ⚠️ warning | Missing auth dependency |
+
+Severity levels: 🔴 **error** (must fix) / ⚠️ **warning** / ℹ️ **info**
+
+You must reply `continue` (or request fixes) before testing begins.
+
+---
+
+### Step 8 — Test
+
+After code review sign-off, Copilot writes and runs Playwright E2E tests:
 
 ```
-Write and run Playwright E2E tests for the borrow book feature.
+(triggered automatically after code review approval)
 ```
 
 Copilot will:
-1. Create a spec file in `tests/e2e/`
-2. Run `npx playwright test`
-3. Generate and open the HTML report (`playwright-report/`)
+1. Derive scenarios from the user story acceptance criteria
+2. Create a spec file in `tests/e2e/`
+3. Run `npx playwright test`
+4. Generate the HTML report (`playwright-report/`)
 
 > **Prerequisite:** The app must be running before tests execute.  
 > Start it with: `docker-compose up` or run frontend/backend manually.
+
+You receive pass/fail counts and must reply `continue` before deployment.
+
+---
+
+### Step 9 — Deployment
+
+The `deployment-assistant` builds and starts the application locally:
+
+```bash
+docker-compose up --build -d
+```
+
+It then checks health on `http://localhost:8000/health` and `http://localhost:3000` and reports a status table. You must reply `continue` before documentation is updated.
+
+---
+
+### Step 10 — Documentation
+
+The `documentation-assistant` scans modified files and appends a feature section to the application docs Confluence page:
+
+- Feature description (user-facing)
+- API changes table
+- UI changes table
+- Environment / config changes
+
+You receive the Confluence URL. Reply `continue` to loop back for the next user story, or `stop` to end the session.
 
 ---
 
@@ -169,10 +263,14 @@ These are specialist sub-agents Copilot can invoke automatically or on request:
 |---|---|---|
 | `confluence-reader` | Fetch & structure requirements from Confluence | "Fetch requirements" |
 | `gap-analyzer` | Compare requirements vs codebase | "Run gap analysis" |
-| `jira-uploader` | Create & upload Jira test cases | "Create test cases" |
-| `feature-developer` | Implement a single approved requirement | "Implement FR-X.X" |
-| `playwright-runner` | Write specs, run tests, generate report | "Run E2E tests" |
-| `sdlc-orchestrator` | Drive the entire pipeline end-to-end | "Run the full SDLC workflow" |
+| `jira-uploader` | Create & upload Jira User Stories | "Create user stories" |
+| `design-assistant` | Architecture overview + API contract → Confluence | Automatically after user consent |
+| `feature-developer` | Implement a single approved requirement + show git diff | "Implement FR-X.X" |
+| `code-review-assistant` | Analyse git diff, produce structured review | Automatically after coding |
+| `playwright-runner` | Write specs from acceptance criteria, run tests, generate report | Automatically after code review |
+| `deployment-assistant` | `docker-compose up --build`, verify health checks | Automatically after testing |
+| `documentation-assistant` | Update application docs in Confluence | Automatically after deployment |
+| `sdlc-orchestrator` | Drive the entire 10-step pipeline end-to-end | "Run the full SDLC workflow" |
 
 ---
 
@@ -184,7 +282,7 @@ Skills are domain-specific playbooks loaded automatically when relevant:
 |---|---|
 | `confluence-analysis` | requirements, confluence, acceptance criteria, user stories |
 | `feature-dev` | implement, develop, feature, backend, frontend, FastAPI, React |
-| `jira-testcase` | test case, Jira, Given/When/Then, upload |
+| `jira-userstory` | user story, Jira, upload, acceptance criteria, As a user, so that |
 | `playwright-automation` | playwright, e2e, automation, spec, browser test, test report |
 
 ---
@@ -201,19 +299,29 @@ Run the full SDLC workflow starting from Confluence.
 Fetch the requirements from Confluence and show me what's missing.
 ```
 
+### Creating user stories for missing requirements
+```
+Create Jira user stories for the missing requirements.
+```
+
 ### Implementing a specific feature
 ```
 Implement FR-3.2 — Return a Book.
 ```
 
-### Creating test cases for a specific requirement
+### Reviewing uncommitted code changes
 ```
-Create Jira test cases for FR-4.1 — Admin View All Users.
+Run a code review on the current uncommitted changes.
 ```
 
 ### Writing E2E tests for an existing feature
 ```
 Write Playwright E2E tests for the Login flow.
+```
+
+### Deploying locally
+```
+Deploy the application locally and verify it is healthy.
 ```
 
 ### Checking what's been built

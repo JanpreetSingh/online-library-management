@@ -23,14 +23,18 @@
 ## SDLC Workflow (enforced)
 1. **Requirements**: always fetched from Confluence via the `confluence-reader` agent
 2. **Gap analysis**: compare requirements with codebase before any feature work
-3. **Test cases**: create Jira test cases for every missing requirement before coding
-4. **User consent**: always ask the user which requirement to implement next — never auto-select
-5. **Feature dev**: implement one requirement at a time, with unit test(s)
-6. **E2E automation**: after every feature, write Playwright spec in `tests/e2e/`, run `npx playwright test`, generate HTML report
+3. **User stories**: create Jira User Stories for every missing requirement before coding
+4. **User consent**: always ask the user which user story to work on next — never auto-select
+5. **Design**: produce architecture overview + API contract in Confluence; await human approval
+6. **Feature dev**: implement one requirement at a time, with unit test(s); display git diff; do not commit
+7. **Code review**: analyse git diff for security, correctness, and pattern compliance; await human approval
+8. **E2E automation**: write Playwright spec in `tests/e2e/` from acceptance criteria, run `npx playwright test`, generate HTML report
+9. **Deployment**: deploy locally via `docker-compose up --build -d`; verify health checks
+10. **Documentation**: update application docs in Confluence after deployment
 
 ## Integrations
-- Confluence: source of truth for requirements (use `confluence/*` MCP tools)
-- Jira: test case management (use `jira/*` MCP tools)
+- Confluence: source of truth for requirements and design documents (use `confluence/*` MCP tools)
+- Jira: user story management (use `jira/*` MCP tools)
 - Playwright MCP: browser automation for live app inspection (use `playwright/*` tools)
 
 ## Security

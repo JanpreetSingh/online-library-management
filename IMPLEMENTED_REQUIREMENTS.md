@@ -72,6 +72,26 @@ This document lists all functional requirements that have been fully implemented
 
 ---
 
+## FR-3 — Borrowing & Returns
+
+### FR-3.1 — Borrow a Book
+- **Status:** ✅ Implemented
+- **Description:** Members, librarians, and admins can borrow available books. Guest users cannot borrow.
+- **Frontend:** `BooksPage.tsx` — "Borrow" button appears on each book card (visible to member/librarian/admin, hidden for guests). Shows loading state during request. On success, displays toast notification and updates available copies immediately.
+- **Backend:** `POST /api/borrow/{book_id}` — role-guarded (guest blocked). Creates `BorrowTransaction` with status `BORROWED`, sets `borrow_date` to current timestamp, `due_date` to 14 days later. Validates:
+  - Book exists and has available copies
+  - User hasn't exceeded 5 active borrows limit
+  - User doesn't already have an active borrow of this book
+  - Uses row-level locking to prevent race conditions
+- **Business Rules:**
+  - 14-day loan period
+  - Maximum 5 active borrows per user
+  - Decrements `available_copies` atomically
+  - Transaction tracking with status enum (BORROWED, RETURNED, OVERDUE)
+- **Database:** `borrow_transactions` table with indexed foreign keys to `users` and `books`.
+
+---
+
 ## Summary Table
 
 | Requirement | Feature | UI | Backend |
@@ -83,6 +103,7 @@ This document lists all functional requirements that have been fully implemented
 | FR-2.0 | View Book Catalogue | ✅ | ✅ |
 | FR-2.1 | Add Books (admin/librarian) | ✅ | ✅ |
 | FR-2.2 | Edit Books (admin/librarian) | ✅ | ✅ |
+| FR-3.1 | Borrow a Book (member/librarian/admin) | ✅ | ✅ |
 
 ---
 
@@ -90,7 +111,6 @@ This document lists all functional requirements that have been fully implemented
 
 | Requirement | Feature |
 |---|---|
-| FR-3.1 | Borrow a Book |
 | FR-3.2 | Return a Book |
 | FR-3.3 | View My Borrowed Books |
 | FR-4.1 | Admin — View All Users |

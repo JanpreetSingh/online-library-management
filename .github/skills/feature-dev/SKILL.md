@@ -12,9 +12,10 @@ argument-hint: 'Requirement ID and description to implement (e.g., REQ-003: Book
 - Writing unit tests for new code
 
 ## Pre-conditions (MUST be met before writing any code)
-1. User has explicitly confirmed which requirement to implement
+1. User has explicitly confirmed which requirement to implement (provided REQ-ID)
 2. Gap analysis has been completed and the requirement is confirmed as missing
-3. Jira test cases have been created for this requirement
+3. A Jira User Story exists for this requirement
+4. Design (architecture overview + API contract) has been reviewed and approved by the human
 
 ## Procedure
 
@@ -58,6 +59,10 @@ FRONTEND
 
 ### 6. Verify No Regression
 - Check that existing routes in `App.tsx` and existing routers still load
+
+### 7. Display Git Diff
+- Run `git diff` and display the full output
+- Do NOT run `git add` or `git commit` — the human will commit when ready
 - Confirm role-based access is preserved
 
 ## Reference Files

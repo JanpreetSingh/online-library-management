@@ -36,4 +36,4 @@ You are performing Step 2 of the SDLC workflow: identify which requirements are 
 |----|-------|--------|-----------------|
 
 4. Summarise: "N requirements fully implemented, M partial, K missing"
-5. The missing/partial list becomes the input for the `create-testcases` prompt
+5. The missing/partial list becomes the input for the `create-userstories` prompt

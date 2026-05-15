@@ -13,8 +13,8 @@ argument-hint: 'Requirement ID or feature name to create Playwright tests for'
 
 ## Pre-conditions
 - The app is running: frontend on `http://localhost:3000`, backend on `http://localhost:8000`
-- Feature has been implemented and manually verified
-- Jira test cases exist for the requirement (use their steps as a basis)
+- Feature has been implemented and code review has been approved
+- Acceptance criteria for the user story are available (use each criterion as a test scenario)
 
 ## Procedure
 
@@ -24,8 +24,8 @@ Use `playwright/*` MCP tools to:
 - Take screenshots to observe actual UI elements, selectors, and flows
 - Note exact element text, `data-testid` attributes, aria labels, or input names
 
-### 2. Map Jira Test Cases → Spec Structure
-Each Jira test case becomes one `test()` block. Group by feature in one `.spec.ts` file:
+### 2. Map Acceptance Criteria → Spec Structure
+Each acceptance criterion from the user story becomes one `test()` block. Group by feature in one `.spec.ts` file:
 ```
 tests/e2e/<feature-name>.spec.ts
 ```
@@ -46,7 +46,7 @@ test.describe('<Feature Name>', () => {
     await expect(page).toHaveURL(/dashboard/);
   });
 
-  test('TC-NNN: <test case title>', async ({ page }) => {
+  test('AC-NNN: <acceptance criterion short title>', async ({ page }) => {
     // Arrange
     await page.goto('/<route>');
     // Act

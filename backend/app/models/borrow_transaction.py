@@ -31,6 +31,10 @@ class BorrowTransaction(Base):
     )
     due_date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False
+        # TODO (scope): REQUIREMENTS.md marks due-date display out of scope for FR-3.1.
+        # The column is retained as a technical prerequisite for the future "Return a Book"
+        # story, which will need it for overdue detection. Set to borrowed_at + 14 days on
+        # creation; remove this comment when the return-flow story is implemented.
     )
     returned_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True

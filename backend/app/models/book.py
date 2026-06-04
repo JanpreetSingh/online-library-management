@@ -1,12 +1,15 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import String, Integer, DateTime, Text
+from sqlalchemy import String, Integer, DateTime, Text, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 from app.database import Base
 
 
 class Book(Base):
     __tablename__ = "books"
+    __table_args__ = (
+        CheckConstraint("available_copies >= 0", name="ck_books_available_copies_non_negative"),
+    )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())

@@ -15,6 +15,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timezone
+import uuid
 
 from app.main import app
 from app.database import Base, get_db
@@ -68,8 +69,10 @@ def member_token(test_db):
     )
     db.add(user)
     db.commit()
+    db.refresh(user)
+    user_id, user_role, user_name = user.id, user.role.value, user.name
     db.close()
-    return create_access_token({"sub": user.id, "role": user.role.value, "name": user.name})
+    return create_access_token({"sub": user_id, "role": user_role, "name": user_name})
 
 
 @pytest.fixture
@@ -79,11 +82,49 @@ def guest_token():
 
 
 @pytest.fixture
+def admin_token(test_db):
+    """Create an admin user and return JWT token"""
+    db = TestingSessionLocal()
+    user = User(
+        id="admin-123",
+        name="Test Admin",
+        email="admin@test.com",
+        password_hash=hash_password("password123"),
+        role=UserRole.admin,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    user_id, user_role, user_name = user.id, user.role.value, user.name
+    db.close()
+    return create_access_token({"sub": user_id, "role": user_role, "name": user_name})
+
+
+@pytest.fixture
+def librarian_token(test_db):
+    """Create a librarian user and return JWT token"""
+    db = TestingSessionLocal()
+    user = User(
+        id="librarian-123",
+        name="Test Librarian",
+        email="librarian@test.com",
+        password_hash=hash_password("password123"),
+        role=UserRole.librarian,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    user_id, user_role, user_name = user.id, user.role.value, user.name
+    db.close()
+    return create_access_token({"sub": user_id, "role": user_role, "name": user_name})
+
+
+@pytest.fixture
 def sample_book(test_db):
     """Create a sample book with 3 copies"""
     db = TestingSessionLocal()
     book = Book(
-        id="book-123",
+        id=str(uuid.uuid4()),
         title="Test Book",
         author="Test Author",
         isbn="1234567890",
@@ -99,13 +140,33 @@ def sample_book(test_db):
 
 
 def test_guest_cannot_borrow(client, guest_token, sample_book):
-    """Test that guest users cannot borrow books"""
+    """Test that guest users cannot borrow books (AC-5)"""
     response = client.post(
         f"/api/borrow/{sample_book.id}",
         headers={"Authorization": f"Bearer {guest_token}"}
     )
     assert response.status_code == 403
-    assert "guest" in response.json()["detail"].lower()
+    assert "members" in response.json()["detail"].lower()
+
+
+def test_admin_cannot_borrow(client, admin_token, sample_book):
+    """Test that admin users cannot borrow books (AC-5: only members may borrow)"""
+    response = client.post(
+        f"/api/borrow/{sample_book.id}",
+        headers={"Authorization": f"Bearer {admin_token}"}
+    )
+    assert response.status_code == 403
+    assert "members" in response.json()["detail"].lower()
+
+
+def test_librarian_cannot_borrow(client, librarian_token, sample_book):
+    """Test that librarian users cannot borrow books (AC-5: only members may borrow)"""
+    response = client.post(
+        f"/api/borrow/{sample_book.id}",
+        headers={"Authorization": f"Bearer {librarian_token}"}
+    )
+    assert response.status_code == 403
+    assert "members" in response.json()["detail"].lower()
 
 
 def test_successful_borrow(client, member_token, sample_book):
@@ -133,7 +194,7 @@ def test_cannot_borrow_unavailable_book(client, member_token, test_db):
     """Test that users cannot borrow when no copies are available"""
     db = TestingSessionLocal()
     book = Book(
-        id="book-unavailable",
+        id=str(uuid.uuid4()),
         title="Popular Book",
         author="Famous Author",
         isbn="9999999999",
@@ -143,10 +204,12 @@ def test_cannot_borrow_unavailable_book(client, member_token, test_db):
     )
     db.add(book)
     db.commit()
+    db.refresh(book)
+    book_id = book.id
     db.close()
     
     response = client.post(
-        f"/api/borrow/{book.id}",
+        f"/api/borrow/{book_id}",
         headers={"Authorization": f"Bearer {member_token}"}
     )
     assert response.status_code == 409
@@ -167,14 +230,15 @@ def test_cannot_borrow_same_book_twice(client, member_token, sample_book):
         f"/api/borrow/{sample_book.id}",
         headers={"Authorization": f"Bearer {member_token}"}
     )
-    assert response2.status_code == 400
+    assert response2.status_code == 409
     assert "already have an active borrow" in response2.json()["detail"].lower()
 
 
 def test_book_not_found(client, member_token):
-    """Test borrowing a non-existent book"""
+    """Test borrowing a non-existent book returns 404 (valid UUID, no DB row)"""
+    nonexistent_id = str(uuid.uuid4())
     response = client.post(
-        "/api/borrow/nonexistent-book-id",
+        f"/api/borrow/{nonexistent_id}",
         headers={"Authorization": f"Bearer {member_token}"}
     )
     assert response.status_code == 404
@@ -190,11 +254,12 @@ def test_unauthenticated_cannot_borrow(client, sample_book):
 def test_max_active_borrows_limit(client, member_token, test_db):
     """Test that users cannot exceed maximum active borrows limit (5)"""
     db = TestingSessionLocal()
-    
+    book_ids = [str(uuid.uuid4()) for _ in range(6)]
+
     # Create 5 books and borrow all of them
     for i in range(5):
         book = Book(
-            id=f"book-{i}",
+            id=book_ids[i],
             title=f"Book {i}",
             author="Author",
             isbn=f"ISBN{i}",
@@ -205,19 +270,19 @@ def test_max_active_borrows_limit(client, member_token, test_db):
         db.add(book)
     db.commit()
     db.close()
-    
+
     # Borrow 5 books successfully
     for i in range(5):
         response = client.post(
-            f"/api/borrow/book-{i}",
+            f"/api/borrow/{book_ids[i]}",
             headers={"Authorization": f"Bearer {member_token}"}
         )
         assert response.status_code == 200
-    
+
     # Try to borrow a 6th book - should fail
     db = TestingSessionLocal()
     book6 = Book(
-        id="book-6",
+        id=book_ids[5],
         title="Book 6",
         author="Author",
         isbn="ISBN6",
@@ -228,10 +293,10 @@ def test_max_active_borrows_limit(client, member_token, test_db):
     db.add(book6)
     db.commit()
     db.close()
-    
+
     response = client.post(
-        "/api/borrow/book-6",
+        f"/api/borrow/{book_ids[5]}",
         headers={"Authorization": f"Bearer {member_token}"}
     )
-    assert response.status_code == 400
+    assert response.status_code == 409
     assert "maximum limit" in response.json()["detail"].lower()

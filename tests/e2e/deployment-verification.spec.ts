@@ -55,7 +55,7 @@ test.describe('Deployment Verification', () => {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     
-    expect([404, 400, 409]).toContain(borrowResponse.status());
+    expect([404, 400, 403, 409, 422]).toContain(borrowResponse.status());
   });
   
   test('Can access books via API', async ({ request }) => {

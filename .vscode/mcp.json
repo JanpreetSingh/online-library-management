@@ -1,30 +1,51 @@
 {
   "servers": {
-    "confluence": {
-      "command": "npx",
-      "args": ["-y", "@anthropic-ai/mcp-confluence@latest"],
+    "atlassian": {
+      "type": "stdio",
+      "command": "c:/Users/JanpreetSinghJolly/gitlab_epam/online-library-management/.venv/Scripts/uvx.exe",
+      "args": ["mcp-atlassian"],
       "env": {
-        "CONFLUENCE_URL": "${env:CONFLUENCE_URL}",
-        "CONFLUENCE_USERNAME": "${env:CONFLUENCE_USERNAME}",
-        "CONFLUENCE_API_TOKEN": "${env:CONFLUENCE_API_TOKEN}"
-      }
-    },
-    "jira": {
-      "command": "npx",
-      "args": ["-y", "@anthropic-ai/mcp-jira@latest"],
-      "env": {
-        "JIRA_URL": "${env:JIRA_URL}",
-        "JIRA_USERNAME": "${env:JIRA_USERNAME}",
-        "JIRA_API_TOKEN": "${env:JIRA_API_TOKEN}",
-        "JIRA_PROJECT_KEY": "${env:JIRA_PROJECT_KEY}"
+        "JIRA_URL": "https://jiraeu.epam.com",
+        "JIRA_USERNAME": "${input:jira-username}",
+        "JIRA_API_TOKEN": "${input:jira-api-token}",
+        "JIRA_PROJECT_KEY": "EPMCDMETST",
+        "CONFLUENCE_URL": "https://kb.epam.com",
+        "CONFLUENCE_USERNAME": "${input:confluence-username}",
+        "CONFLUENCE_API_TOKEN": "${input:confluence-api-token}",
+        "TOOLSETS": "all"
       }
     },
     "playwright": {
-      "command": "npx",
+      "type": "stdio",
+      "command": "npx.cmd",
       "args": ["-y", "@playwright/mcp@latest"],
       "env": {
         "PLAYWRIGHT_BROWSERS_PATH": "0"
       }
     }
-  }
+  },
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "confluence-username",
+      "description": "Confluence username or email"
+    },
+    {
+      "type": "promptString",
+      "id": "confluence-api-token",
+      "description": "Confluence API token",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "jira-username",
+      "description": "Jira username or email"
+    },
+    {
+      "type": "promptString",
+      "id": "jira-api-token",
+      "description": "Jira API token",
+      "password": true
+    }
+  ]
 }

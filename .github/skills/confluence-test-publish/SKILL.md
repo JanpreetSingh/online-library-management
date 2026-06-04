@@ -229,7 +229,7 @@ If automated update fails, provide formatted table row for manual copy-paste:
 # 1. Run Playwright tests
 npx playwright test
 
-# 2. Generate report (already done by playwright-runner agent)
+# 2. Generate report (already done by verify-test agent)
 # TEST-EXECUTION-REPORT.md exists
 
 # 3. Publish to Confluence
@@ -267,15 +267,15 @@ If the Confluence page is empty or has no table, create this structure:
 ## Integration with SDLC Workflow
 
 This skill is typically called by the `sdlc-orchestrator` after:
-1. Feature is developed (`feature-developer` agent)
-2. Tests are written and executed (`playwright-runner` agent)
+1. Feature is developed (`implementation` agent)
+2. Tests are written and executed (`verify-test` agent)
 3. Test report is generated
 
 The workflow is:
 ```
 sdlc-orchestrator 
-  → feature-developer (implements feature)
-  → playwright-runner (writes & runs tests)
+  → implementation (implements feature)
+  → verify-test (writes & runs tests)
   → confluence-test-publisher (publishes summary) ← THIS SKILL
   → pr-creator (creates pull request)
 ```

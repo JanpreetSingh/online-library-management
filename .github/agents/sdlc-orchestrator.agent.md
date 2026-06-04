@@ -2,7 +2,7 @@
 description: 'Master SDLC orchestration agent for Online Library Management. Drives the full workflow: fetch requirements → gap analysis → create Jira user stories → design → code → code review → test → deploy → document. Use when running the full SDLC pipeline, starting development workflow, or orchestrating requirement delivery.'
 name: sdlc-orchestrator
 tools: [agent, todo, read, search, confluence/*, jira/*, playwright/*, execute, edit]
-agents: [confluence-reader, gap-analyzer, jira-uploader, design-assistant, feature-developer, code-review-assistant, playwright-runner, deployment-assistant, documentation-assistant]
+agents: [confluence-reader, gap-analyzer, jira-uploader, design-assistant, implementation, code-review-assistant, verify-test, pr-creator, deployment-assistant, documentation-assistant]
 user-invocable: true
 argument-hint: 'Optional: Confluence page URL or requirement ID to start from'
 ---
@@ -76,7 +76,7 @@ After the subagent completes, present the Confluence URL to the user and ask:
 
 ### STEP 6 — Code *(human review gate)*
 
-Delegate to the `feature-developer` subagent with the approved user story:
+Delegate to the `implementation` subagent with the approved user story:
 > "Implement REQ-NNN: <title> per its acceptance criteria."
 
 After the subagent completes, display the git diff output it produced and ask:
@@ -102,13 +102,29 @@ After the subagent completes, present the review table and ask:
 
 ### STEP 8 — Test *(human review gate)*
 
-Delegate to the `playwright-runner` subagent, passing the user story acceptance criteria:
+Delegate to the `verify-test` subagent, passing the user story acceptance criteria:
 > "Write and execute Playwright E2E tests for REQ-NNN using these acceptance criteria: <criteria>."
 
 After the subagent completes, report pass/fail summary and ask:
 > "Testing for REQ-NNN complete:
 > - Passed: P / Failed: F
 > - Report: playwright-report/index.html
+> - Verification: verify-test-result.md
+>
+> Reply 'continue' to proceed to PR creation, or 'stop' to end here."
+
+**WAIT for user approval before proceeding.**
+
+---
+
+### STEP 8.5 — PR Creation *(human review gate)*
+
+Delegate to the `pr-creator` subagent:
+> "Create a Pull Request for REQ-NNN. Generate the full PR description including Summary, Changes Made, Test Evidence, Known Limitations, and Reviewer Checklist. Write the changelog entry and create the PR via GitHub MCP."
+
+After the subagent completes, present the PR URL and ask:
+> "PR for REQ-NNN has been created: <PR URL>
+> Changelog entry written to CHANGELOG.md.
 >
 > Reply 'continue' to proceed to deployment, or 'stop' to end here."
 

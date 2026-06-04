@@ -1,0 +1,184 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        // ─── Docker Compose ───────────────────────────────────────────────────────
+        {
+            "label": "Docker: Deploy UAT",
+            "type": "shell",
+            "command": "docker compose --env-file config/uat.env -f docker-compose.yml -f docker-compose.uat.yml up --build -d",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "tab": "UAT Deploy"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: Deploy PreProd",
+            "type": "shell",
+            "command": "docker compose --env-file config/preprod.env -f docker-compose.yml -f docker-compose.preprod.yml up --build -d",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "tab": "PreProd Deploy"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: Deploy Dev (default)",
+            "type": "shell",
+            "command": "docker compose up --build -d",
+            "group": { "kind": "build", "isDefault": true },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "tab": "Dev Deploy"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: Stop All",
+            "type": "shell",
+            "command": "docker compose down",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": { "reveal": "always", "panel": "shared" },
+            "problemMatcher": []
+        },
+        // ─── Backend (local / no Docker) ─────────────────────────────────────────
+        {
+            "label": "Backend: Run UAT (local)",
+            "type": "shell",
+            "command": ".venv/Scripts/uvicorn app.main:app --host 0.0.0.0 --port 8001",
+            "options": {
+                "cwd": "${workspaceFolder}/backend",
+                "env": {
+                    "DATABASE_URL": "${env:UAT_DATABASE_URL}",
+                    "JWT_SECRET": "${env:UAT_JWT_SECRET}",
+                    "JWT_ALGORITHM": "HS256",
+                    "JWT_EXPIRE_MINUTES": "30",
+                    "FIRST_ADMIN_EMAIL": "admin-uat@library.com",
+                    "FIRST_ADMIN_PASSWORD": "UatAdmin@123",
+                    "FIRST_ADMIN_NAME": "UAT Administrator"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "tab": "Backend UAT"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Backend: Run PreProd (local)",
+            "type": "shell",
+            "command": ".venv/Scripts/uvicorn app.main:app --host 0.0.0.0 --port 8002",
+            "options": {
+                "cwd": "${workspaceFolder}/backend",
+                "env": {
+                    "DATABASE_URL": "${env:PREPROD_DATABASE_URL}",
+                    "JWT_SECRET": "${env:PREPROD_JWT_SECRET}",
+                    "JWT_ALGORITHM": "HS256",
+                    "JWT_EXPIRE_MINUTES": "30",
+                    "FIRST_ADMIN_EMAIL": "admin-preprod@library.com",
+                    "FIRST_ADMIN_PASSWORD": "PreProdAdmin@123",
+                    "FIRST_ADMIN_NAME": "PreProd Administrator"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "tab": "Backend PreProd"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Backend: Run Dev (local)",
+            "type": "shell",
+            "command": ".venv/Scripts/uvicorn app.main:app --reload --port 8000",
+            "options": {
+                "cwd": "${workspaceFolder}/backend",
+                "env": {
+                    "DATABASE_URL": "postgresql://library_user:library_pass@localhost:5432/library_db",
+                    "JWT_SECRET": "dev_secret_key_replace_in_production_min32chars",
+                    "JWT_ALGORITHM": "HS256",
+                    "JWT_EXPIRE_MINUTES": "30",
+                    "FIRST_ADMIN_EMAIL": "admin@library.com",
+                    "FIRST_ADMIN_PASSWORD": "Admin@123",
+                    "FIRST_ADMIN_NAME": "Administrator"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "tab": "Backend Dev"
+            },
+            "problemMatcher": []
+        },
+        // ─── Frontend ─────────────────────────────────────────────────────────────
+        {
+            "label": "Frontend: Dev server",
+            "type": "shell",
+            "command": "npm run dev",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "tab": "Frontend Dev"
+            },
+            "problemMatcher": []
+        },
+        // ─── Tests ────────────────────────────────────────────────────────────────
+        {
+            "label": "Test: Playwright E2E (UAT)",
+            "type": "shell",
+            "command": "npx playwright test",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "BASE_URL": "http://uat.library.internal:3000",
+                    "TEST_ENV": "uat"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "tab": "E2E UAT"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Test: Playwright E2E (Dev)",
+            "type": "shell",
+            "command": "npx playwright test",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "BASE_URL": "http://localhost:3000",
+                    "TEST_ENV": "dev"
+                }
+            },
+            "group": { "kind": "test", "isDefault": true },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "tab": "E2E Dev"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

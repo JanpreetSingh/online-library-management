@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx playwright *)",
+      "Bash(curl -X POST http://localhost:8000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"admin@library.com\",\"password\":\"Admin@123\"}')",
+      "Bash(curl -X POST http://localhost:8000/api/borrow/any-book-id -w \"\\\\nStatus: %{http_code}\\\\n\")",
+      "Bash(docker-compose exec *)",
+      "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"member@library.com\",\"password\":\"Member@123\"}')",
+      "Bash(python -m json.tool)",
+      "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"librarian@library.com\",\"password\":\"Librarian@123\"}')",
+      "Bash(python *)",
+      "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"guest@library.com\",\"password\":\"Guest@123\"}')"
+    ]
+  }
+}

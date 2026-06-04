@@ -1,0 +1,13 @@
+# Confluence credentials - NEVER commit these
+.env
+credentials.txt
+*.token
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Backup files
+*.bak
+*.backup

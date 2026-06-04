@@ -1,7 +1,7 @@
 ---
 name: design
 description: 'Produce architecture overview and API contract for a selected user story and publish to Confluence. Use when creating design documentation, identifying impacted files, specifying endpoints, or preparing designs for human review before coding. Triggers on: design, architecture, API contract, endpoint, impacted files, Confluence design.'
-argument-hint: 'User story ID and title to design (e.g., REQ-003: Book Search)'
+argument-hint: 'Requirements source and user story title to design (e.g., REQ-003: Book Search). Optionally prefix with a file path: "path/to/requirements.md REQ-003: Book Search". Defaults to REQUIREMENTS.md at the project root if no path is given.'
 ---
 
 # Skill: Architecture Design & API Contract
@@ -14,8 +14,10 @@ argument-hint: 'User story ID and title to design (e.g., REQ-003: Book Search)'
 
 ## Procedure
 
-### 1. Read the User Story
-- Accept requirement ID, title, and acceptance criteria from the orchestrator
+### 1. Read Requirements
+- If a requirements file path was passed as part of the argument, read that file
+- Otherwise, fall back to `REQUIREMENTS.md` at the project root
+- Extract the user story, acceptance criteria, and functional/non-functional requirements
 - Note all roles involved and the expected user interactions
 
 ### 2. Scan the Codebase
@@ -26,10 +28,24 @@ Use `read` and `search` tools to identify:
 - Existing pages in `frontend/src/pages/` that may need updating
 - New files that must be created (routers, schemas, models, pages, services, types)
 
-### 3. Compose the Architecture Overview
+### 3. Compose Section A — High-Level System Architecture
+Load `architecture-design.instructions.md` for technology reference, then produce:
+- **Mermaid component diagram** showing Frontend, API Gateway, Backend, Database, Auth and their interactions
+- **Technology choices**: list each layer and the technology used
+- **Data flow**: numbered step-by-step sequence from browser to DB and back
+- **Key components table**:
+
+  | Component | Technology | Responsibility |
+  |-----------|-----------|----------------|
+  | Frontend  | React 18 + TypeScript + Tailwind | ... |
+  | Backend   | Python FastAPI | ... |
+  | Database  | PostgreSQL + SQLAlchemy | ... |
+  | Auth      | JWT (python-jose) | ... |
+
+### 4. Compose Section B — Impacted Files
 
 ```markdown
-## Architecture Overview
+## Impacted Files
 
 ### Files to Modify
 | File | Change |
@@ -48,7 +64,7 @@ Use `read` and `search` tools to identify:
 - OR: No schema changes required
 ```
 
-### 4. Compose the API Contract
+### 5. Compose Section C — API Contract
 
 For each new or modified endpoint:
 ```markdown
@@ -62,14 +78,33 @@ For each new or modified endpoint:
 - **Response 409**: `{ "detail": "Book already borrowed" }`
 ```
 
-### 5. Publish to Confluence
-Create or update a Confluence page titled `Design: <User Story Title>` using `confluence/*` MCP tools. Include both sections above.
+### 6. Write `ARCHITECTURE.md`
+Create or update `ARCHITECTURE.md` at the project root with the following structure:
+```markdown
+# Architecture: <User Story Title>
+
+## High-Level System Architecture
+<Mermaid diagram>
+
+## Technology Stack
+<Key components table>
+
+## Data Flow
+<Numbered steps>
+
+## Impacted Files
+<Modified / created file list>
+
+## API Contract
+<Endpoint specifications>
+```
+
 
 ## Output Format
 
 ```
-Design published: "Design: <Title>"
-Confluence URL: <url>
+
+ARCHITECTURE.md written to: <project-root>/ARCHITECTURE.md
 
 Architecture overview: N files modified, M files created
 API contract: K endpoints specified
@@ -78,4 +113,4 @@ Awaiting human review and approval before coding begins.
 ```
 
 ## Reference Files
-- [Architecture instructions](../../instructions/architecture.instructions.md)
+- [Architecture instructions](../../instructions/architecture-design.instructions.md)

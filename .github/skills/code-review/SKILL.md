@@ -20,27 +20,29 @@ git diff
 ```
 If empty, also run `git diff --cached` for staged changes.
 
-### 2. Review Criteria
+### 2. Review Checklist
 
-Evaluate the diff against:
+Evaluate the diff against every area below. Raise a finding for each violation.
 
-| Category | What to Check |
-|----------|--------------|
-| **Security** | No hardcoded secrets; inputs validated by Pydantic at API boundary; JWT guard on protected routes; no SQL injection via raw queries |
-| **Correctness** | Logic matches the acceptance criteria of the user story; edge cases handled |
-| **Architecture** | Backend follows patterns in `backend/app/routers/`; frontend uses functional components + Tailwind only; no inline styles |
-| **Tests** | pytest unit tests present for every new backend endpoint |
-| **Regression** | No existing routes, imports, or types silently broken |
-| **OWASP Top 10** | Check for broken auth, injection, insecure direct object references, sensitive data exposure |
+| Review Area | Review Question |
+|-------------|----------------|
+| **Correctness** | Does each component behave as specified in `REQUIREMENTS.md`? Do endpoints return the exact status codes and payload shapes defined in the acceptance criteria? |
+| **Security** | Are secrets excluded from source and output? Is all user input validated at the API boundary (Pydantic schemas)? Are JWT guards on every protected route? No hardcoded credentials, no raw SQL, no OWASP Top 10 issues (injection, broken auth, IDOR, sensitive data exposure)? |
+| **Error Handling** | Are all API failures, missing records, and empty result sets handled gracefully with appropriate HTTP status codes and human-readable messages? No unhandled exceptions that would produce a 500? |
+| **Test Coverage** | Do tests cover the happy path **and** the edge cases — `Not Found` (404), `Conflict` (409), `Unauthorized` (401), `Forbidden` (403), and any missing-field / malformed-input scenarios? |
+| **Code Clarity** | Are function and variable names self-explanatory? Is the logic easy to follow without needing inline comments? Are complex decisions documented where they exist? |
+| **DRY Principle** | Is there duplicated logic that could be refactored into a shared helper or dependency? Flag any copy-paste patterns across routers, schemas, or components. |
+| **Dependency Safety** | Are any newly added or updated package versions known to be vulnerable (CVE)? Cross-check `requirements.txt` and `package.json` additions against known advisories. |
 
 ### 3. Compose the Review Table
 
 ```markdown
-| File | Line | Severity | Finding |
-|------|------|----------|---------|
-| backend/app/routers/X.py | 42 | 🔴 error | Missing `Depends(get_current_user)` on protected route |
-| frontend/src/pages/X.tsx | 18 | ⚠️ warning | Inline style used — replace with Tailwind class |
-| backend/app/schemas/X.py | 7 | ℹ️ info | Consider adding a `Config` class for ORM mode |
+| File | Line | Area | Severity | Finding |
+|------|------|------|----------|---------|
+| backend/app/routers/X.py | 42 | Security | 🔴 error | Missing `Depends(get_current_user)` on protected route |
+| backend/tests/test_X.py | — | Test Coverage | 🔴 error | No test for 404 when record does not exist |
+| frontend/src/pages/X.tsx | 18 | Code Clarity | ⚠️ warning | Inline style used — replace with Tailwind class |
+| backend/app/schemas/X.py | 7 | DRY Principle | ℹ️ info | Duplicate pagination logic; consider shared helper |
 ```
 
 Severity levels:

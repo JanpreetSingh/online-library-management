@@ -1,63 +1,50 @@
 ---
-description: 'Implement a user-selected user story in the Online Library Management application, write unit tests, display git diff for review, then run Playwright E2E automation. Covers Steps 6–8 of the SDLC workflow.'
-name: develop-feature
-agent: agent
-tools: [read, edit, search, execute, playwright/*]
+description: 'SDLC Step 6 — Implement all tasks from the approved implementation-plan.md sequentially, one at a time in priority order, until all are done. Run after implementation-plan.md is approved and before code review.'
+mode: agent
 ---
 
-# Develop Feature for Selected User Story
+# SDLC Step 6 — Feature Development
 
-You are performing Steps 6–8 of the SDLC workflow: implement the code, then test it. Steps 5 (Design) and 7 (Code Review) are human-gated checkpoints handled by the orchestrator.
+**Invoke agent**: `implementation`
 
-## Pre-conditions (MUST be met before writing any code)
-- User has confirmed which REQ-ID to implement
-- Design (architecture overview + API contract) has been reviewed and approved by the human
+## Pre-conditions (must ALL be true before running)
 
----
+| Check | Requirement |
+|-------|-------------|
+| `implementation-plan.md` exists | Implementation planning has been completed |
+| Human has approved `implementation-plan.md` | Task list confirmed before coding starts |
+| `design-review.md` gate shows **✅ Approved** | No unresolved 🔴 errors in architecture |
+| At least one task is `ready` or `not-started` | There is work to do |
 
-## Step 6: Implement the Feature
+If any pre-condition is not met, stop and resolve it before proceeding.
 
-Apply the `feature-dev` skill for the selected requirement:
-1. Announce: "Implementing REQ-NNN: <title>. Proceeding."
-2. Show the implementation plan (list of files to create/modify) — wait for user confirmation
-3. Implement backend (FastAPI router, Pydantic schema, SQLAlchemy model if needed)
-4. Implement frontend (React page, service, types, route registration)
-5. Write pytest unit tests for every new backend endpoint
-6. Verify no existing routes or imports are broken
-7. Run `git diff` and display the full output
+## Invocation
 
-> **Do NOT run `git add` or `git commit`.** The human decides when to commit.
-
----
-
-## Step 7: Code Review Gate (orchestrator-handled)
-
-The `code-review-assistant` runs automatically after the human approves the diff. Do not proceed to testing until the orchestrator signals code review is approved.
-
----
-
-## Step 8: Playwright E2E Automation
-
-Apply the `playwright-automation` skill once code review is approved:
-1. Use Playwright MCP to inspect the live app for this feature's UI
-2. Map each acceptance criterion to one `test()` block
-3. Write `tests/e2e/<feature-name>.spec.ts`
-4. Execute tests:
-```bash
-npx playwright test tests/e2e/<feature-name>.spec.ts
+To implement all tasks from the beginning:
 ```
-5. Generate HTML report:
-```bash
-npx playwright show-report
+@implementation
 ```
-6. Report pass/fail count and confirm `playwright-report/index.html` exists
 
----
+To resume from a specific task after an interruption:
+```
+@implementation resume_from=TASK-5
+```
 
-## Completion Summary
+The agent works through every task in P1 → P2 → P3 order, pausing after each task's git diff for human approval before moving to the next.
 
-Output:
-- Requirement ID implemented
-- Files created/modified
-- Playwright test results (N passed, M failed)
-- Path to HTML report: `playwright-report/index.html`
+## Gate
+
+| Result | Action |
+|--------|--------|
+| All tasks `done ✓` in `implementation-plan.md` | ✅ **Proceed to SDLC Step 7 — Code Review** (`@code-review`) |
+| Human rejects a diff | 🔴 **Apply changes**, re-run `git diff`, re-present — then continue to next task |
+| A `blocked` task is reached mid-run | ⚠️ **Pause** — resolve the blocking dependency, then resume with `@implementation resume_from=TASK-N` |
+| Coverage gaps remain after all tasks done | 🔴 **Blocked** — update `implementation-plan.md` with missing tasks, then re-run |
+
+> **Do NOT run `git add` or `git commit`.** The human commits when code review is approved.
+
+## Next Step
+
+After **all tasks** are `done ✓` in `implementation-plan.md`, proceed to:
+
+**SDLC Step 7** → `@code-review` — review the full diff for security, correctness, and pattern compliance before committing.

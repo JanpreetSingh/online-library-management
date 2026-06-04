@@ -5,13 +5,22 @@ from app.database import get_db
 from app.auth.jwt import decode_token
 from app.models.user import User, UserRole
 
-bearer_scheme = HTTPBearer()
+bearer_scheme = HTTPBearer(auto_error=False)
 
 
 def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
     db: Session = Depends(get_db),
 ) -> User:
+    # Auth split (NFR1 / AC-5):
+    #   401 Unauthorized = no token supplied, or token is malformed / expired (handled here).
+    #   403 Forbidden    = valid token but the role is insufficient (enforced in each router).
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     token = credentials.credentials
     payload = decode_token(token)
 

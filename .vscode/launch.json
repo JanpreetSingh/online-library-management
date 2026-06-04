@@ -1,0 +1,69 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Backend: Debug Dev",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": ["app.main:app", "--reload", "--port", "8000"],
+            "cwd": "${workspaceFolder}/backend",
+            "env": {
+                "DATABASE_URL": "postgresql://library_user:library_pass@localhost:5432/library_db",
+                "JWT_SECRET": "dev_secret_key_replace_in_production_min32chars",
+                "JWT_ALGORITHM": "HS256",
+                "JWT_EXPIRE_MINUTES": "30",
+                "FIRST_ADMIN_EMAIL": "admin@library.com",
+                "FIRST_ADMIN_PASSWORD": "Admin@123",
+                "FIRST_ADMIN_NAME": "Administrator"
+            },
+            "jinja": true,
+            "justMyCode": false
+        },
+        {
+            "name": "Backend: Debug UAT",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": ["app.main:app", "--host", "0.0.0.0", "--port", "8001"],
+            "cwd": "${workspaceFolder}/backend",
+            "envFile": "${workspaceFolder}/config/uat.env",
+            "jinja": true,
+            "justMyCode": false
+        },
+        {
+            "name": "Backend: Debug PreProd",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": ["app.main:app", "--host", "0.0.0.0", "--port", "8002"],
+            "cwd": "${workspaceFolder}/backend",
+            "envFile": "${workspaceFolder}/config/preprod.env",
+            "jinja": true,
+            "justMyCode": false
+        },
+        {
+            "name": "Backend: Run Tests (pytest)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": ["tests/", "-v"],
+            "cwd": "${workspaceFolder}/backend",
+            "env": {
+                "DATABASE_URL": "postgresql://library_user:library_pass@localhost:5432/library_db",
+                "JWT_SECRET": "dev_secret_key_replace_in_production_min32chars",
+                "JWT_ALGORITHM": "HS256",
+                "JWT_EXPIRE_MINUTES": "30"
+            },
+            "justMyCode": false
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Full Stack: Dev (Backend + Frontend)",
+            "configurations": ["Backend: Debug Dev"],
+            "preLaunchTask": "Frontend: Dev server",
+            "stopAll": true
+        }
+    ]
+}

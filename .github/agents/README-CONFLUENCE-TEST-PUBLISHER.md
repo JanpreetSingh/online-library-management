@@ -31,7 +31,7 @@ After tests are executed, this agent:
 The agent is typically invoked automatically by the `sdlc-orchestrator` after tests complete:
 
 ```
-sdlc-orchestrator → playwright-runner → confluence-test-publisher
+sdlc-orchestrator → verify-test → confluence-test-publisher
 ```
 
 ### Option 2: Manual Invocation

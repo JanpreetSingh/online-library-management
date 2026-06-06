@@ -1,0 +1,11 @@
+# Environment config files with real secrets — never commit these
+config/uat.env
+config/preprod.env
+config/prod.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*.log

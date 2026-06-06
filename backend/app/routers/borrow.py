@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from datetime import datetime, timezone, timedelta
+import uuid
 
 from app.database import get_db
 from app.models.book import Book
@@ -19,54 +20,60 @@ MAX_ACTIVE_BORROWS = 5
 
 @router.post("/{book_id}", response_model=BorrowBookResponse)
 def borrow_book(
-    book_id: str,
+    book_id: uuid.UUID,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
     Borrow a book - creates a transaction and decrements available_copies.
-    
+
+    Auth: 401 = missing/invalid JWT (enforced in dependencies.py before this runs).
+          403 = valid JWT but role is not 'member' (guest, admin, librarian all rejected here).
+
     Rules:
-    - Guest users cannot borrow
+    - Only members may borrow; all other roles are forbidden
     - Book must exist and have available copies
     - User cannot borrow same book twice concurrently
     - User cannot exceed MAX_ACTIVE_BORROWS limit
     """
-    
-    # Check if user is guest
-    if current_user.role == UserRole.guest:
+
+    # 403: only 'member' role may borrow — guest, admin and librarian are all rejected.
+    # (401 for missing/invalid JWT is already raised in get_current_user before reaching here.)
+    if current_user.role != UserRole.member:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Guest users cannot borrow books"
+            detail="Only members can borrow books"
         )
-    
+
     # Check user's active borrow count
     active_borrows_count = db.query(BorrowTransaction).filter(
         BorrowTransaction.user_id == current_user.id,
         BorrowTransaction.returned_at.is_(None)
     ).count()
-    
+
     if active_borrows_count >= MAX_ACTIVE_BORROWS:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_409_CONFLICT,
             detail=f"You have reached the maximum limit of {MAX_ACTIVE_BORROWS} active borrows"
         )
-    
+
     # Check if user already has an active borrow for this book
+    book_id_str = str(book_id)
     existing_borrow = db.query(BorrowTransaction).filter(
         BorrowTransaction.user_id == current_user.id,
-        BorrowTransaction.book_id == book_id,
+        BorrowTransaction.book_id == book_id_str,
         BorrowTransaction.returned_at.is_(None)
     ).first()
     
     if existing_borrow:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_409_CONFLICT,
             detail="You already have an active borrow for this book"
         )
     
-    # Lock the book row and check availability (prevents race conditions)
-    book = db.query(Book).filter(Book.id == book_id).with_for_update().first()
+    # PostgreSQL READ COMMITTED isolation + SELECT FOR UPDATE row lock ensures
+    # at-most-one successful concurrent borrow for the last available copy.
+    book = db.query(Book).filter(Book.id == book_id_str).with_for_update().first()
     
     if not book:
         raise HTTPException(
@@ -87,7 +94,7 @@ def borrow_book(
     # Create borrow transaction
     transaction = BorrowTransaction(
         user_id=current_user.id,
-        book_id=book_id,
+        book_id=book_id_str,
         borrowed_at=borrowed_at,
         due_date=due_date,
         status=BorrowStatus.borrowed

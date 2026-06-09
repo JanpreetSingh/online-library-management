@@ -1,4 +1,9 @@
 {
+  "env": {
+    "PROJECT_NAME": "online-library-management",
+    "JIRA_PROJECT": "LIB",
+    "DEFAULT_BRANCH": "master"
+  },
   "permissions": {
     "allow": [
       "Bash(npx playwright *)",
@@ -9,7 +14,35 @@
       "Bash(python -m json.tool)",
       "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"librarian@library.com\",\"password\":\"Librarian@123\"}')",
       "Bash(python *)",
-      "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"guest@library.com\",\"password\":\"Guest@123\"}')"
+      "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"guest@library.com\",\"password\":\"Guest@123\"}')",
+      "Bash(git status)",
+      "Bash(git status -s)",
+      "Bash(git branch --show-current)",
+      "Bash(git diff --stat)",
+      "Bash(git log * --oneline)",
+      "Bash(cd backend && python -m pytest tests/ -v)",
+      "Bash(docker-compose ps)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:*)",
+      "Bash(ls -la *)",
+      "Bash(find .claude -name \"*.md\" -type f)",
+      "Bash(.venv/Scripts/python.exe -m pytest tests/test_borrow.py -v)",
+      "Bash(curl *)",
+      "Bash(docker-compose restart *)",
+      "Bash(docker-compose logs *)",
+      "Bash(docker-compose down *)",
+      "Bash(docker-compose up *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '📚 Online Library Management | SDLC Agents Ready | Use: @orchestrator-sdlc TICKET-ID'"
+          }
+        ]
+      }
     ]
   }
 }

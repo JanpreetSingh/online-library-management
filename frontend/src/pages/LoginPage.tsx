@@ -28,7 +28,7 @@ export default function LoginPage() {
       const { access_token } = await authService.login(values);
       login(access_token);
       toast.success('Login successful!');
-      navigate('/dashboard');
+      navigate('/books');
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||

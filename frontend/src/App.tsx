@@ -8,6 +8,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
 import BooksPage from './pages/BooksPage';
+import BookDetailPage from './pages/BookDetailPage';
 import EditBookPage from './pages/EditBookPage';
 
 export default function App() {
@@ -50,6 +51,14 @@ export default function App() {
             element={
               <PrivateRoute>
                 <BooksPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/books/:id"
+            element={
+              <PrivateRoute>
+                <BookDetailPage />
               </PrivateRoute>
             }
           />

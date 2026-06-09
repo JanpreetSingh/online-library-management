@@ -8,14 +8,32 @@ from app.database import get_db
 from app.models.book import Book
 from app.models.user import User, UserRole
 from app.models.borrow_transaction import BorrowTransaction, BorrowStatus
-from app.schemas.borrow_transaction import BorrowBookResponse
+from app.schemas.borrow_transaction import BorrowBookResponse, BorrowTransactionResponse
 from app.auth.dependencies import get_current_user
+from typing import List
 
 router = APIRouter(prefix="/api/borrow", tags=["borrow"])
 
 # Business rules constants
 LOAN_DAYS = 14
 MAX_ACTIVE_BORROWS = 5
+
+
+@router.get("/user", response_model=List[BorrowTransactionResponse])
+def get_user_borrows(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Get all borrow transactions for the current user.
+
+    Returns list of all borrows (both active and returned).
+    """
+    borrows = db.query(BorrowTransaction).filter(
+        BorrowTransaction.user_id == current_user.id
+    ).order_by(BorrowTransaction.borrowed_at.desc()).all()
+
+    return borrows
 
 
 @router.post("/{book_id}", response_model=BorrowBookResponse)

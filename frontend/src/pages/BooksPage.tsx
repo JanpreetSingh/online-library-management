@@ -210,7 +210,7 @@ export default function BooksPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filtered.map((book) => (
-                    <tr key={book.id} className="hover:bg-gray-50 transition">
+                    <tr key={book.id} data-testid="book-card" data-book-id={book.id} className="hover:bg-gray-50 transition">
                       <td className="px-4 py-3">
                         {book.cover_image_url ? (
                           <img
@@ -243,13 +243,14 @@ export default function BooksPage() {
                       <td className="px-4 py-3 text-center text-gray-600">{book.total_copies}</td>
                       <td className="px-4 py-3 text-center">
                         <span
+                          data-testid="available-copies"
                           className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full ${
                             book.available_copies > 0
                               ? 'bg-green-100 text-green-700'
                               : 'bg-red-100 text-red-600'
                           }`}
                         >
-                          {book.available_copies > 0 ? `${book.available_copies} available` : 'All borrowed'}
+                          {book.available_copies}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-center">

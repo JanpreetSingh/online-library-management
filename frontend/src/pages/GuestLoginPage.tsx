@@ -30,7 +30,7 @@ export default function GuestLoginPage() {
       const { access_token } = await authService.guestLogin(values);
       login(access_token);
       toast.success(`Welcome, ${values.name}!`);
-      navigate('/dashboard');
+      navigate('/books');
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||

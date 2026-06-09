@@ -4,7 +4,7 @@ from typing import Optional
 
 
 class BorrowTransactionResponse(BaseModel):
-    transaction_id: str
+    id: str
     book_id: str
     user_id: str
     borrowed_at: datetime

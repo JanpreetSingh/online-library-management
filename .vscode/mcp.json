@@ -1,5 +1,13 @@
 {
   "servers": {
+    "github": {
+      "type": "stdio",
+      "command": "npx.cmd",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github-token}"
+      }
+    },
     "atlassian": {
       "type": "stdio",
       "command": "c:/Users/JanpreetSinghJolly/gitlab_epam/online-library-management/.venv/Scripts/uvx.exe",
@@ -25,6 +33,12 @@
     }
   },
   "inputs": [
+    {
+      "type": "promptString",
+      "id": "github-token",
+      "description": "GitHub Personal Access Token (with repo and PR permissions)",
+      "password": true
+    },
     {
       "type": "promptString",
       "id": "confluence-username",
